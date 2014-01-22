@@ -1,0 +1,43 @@
+@(movie: Movie, stats: MovieStat, similarMovies: List[(Movie, Double)])
+
+@main("Welcome to Play starter") {
+  @header("Home")
+
+    <div class="container theme-showcase">
+      
+      <div class="row">
+	    <div class="col-sm-2 col-md-2"></div>
+	    <div class="col-sm-2 col-md-2">
+            <img src="@movie.url" class="img-rounded img-responsive" />
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <blockquote>
+                <p>@movie.name</p> 
+                <small><cite title="Source Title">Directed by <a href="@routes.Application.directedMovies(movie.director)">@movie.director</a>  <i class="fa fa-user"></i></cite></small>
+            </blockquote>
+            <p>
+            	<i class="fa fa-star"></i> @utils.Formating.roundAt(stats.avgRating, 1)<br />
+            	<i class="fa fa-thumbs-up"></i> @stats.nbLikes / <i class="fa fa-thumbs-down"></i> @stats.nbDislikes<br />
+            	<i class="fa fa-users"></i> @for((star, index) <- movie.stars.zipWithIndex){@if(index != 0){, }<a href="@routes.Application.moviesWithStar(star)">@star</a>}...<br />
+             </p>
+             <p>@movie.description</p>
+             <p>
+				@for(tag <- movie.tags){
+					<a href="@routes.Application.taggedMovies(tag)">#@tag</a>
+				}
+			 </p>
+        </div>
+	    <div class="col-sm-1 col-md-1"></div>
+        <div class="col-sm-3 col-md-3">
+        	<h3>Similar movies</h3>
+        	@for(movie <- similarMovies){
+		      <div class="thumbnail">
+		        <a href="@routes.Application.movie(movie._1.id)" title="@movie._1.name"><img src="@movie._1.url" style="height: 150px;"></a>
+		        <p>Similarity of @utils.Formating.roundAt(movie._2, 3)</p>
+		      </div>
+        	}
+        </div>
+	  </div>
+
+    </div> <!-- /container -->
+}

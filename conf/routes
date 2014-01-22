@@ -1,0 +1,18 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+# Movies
+GET    /movies                      controllers.Application.movies
+GET    /movies/tag/:tag             controllers.Application.taggedMovies(tag: String)
+GET    /movies/director/:director   controllers.Application.directedMovies(director: String)
+GET    /movies/star/:star           controllers.Application.moviesWithStar(star: String)
+GET    /movies/:id                  controllers.Application.movie(id: Int)
+GET    /profiles                    controllers.Application.profiles
+GET    /profiles/:id                controllers.Application.profile(id: Int)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,0 +1,23 @@
+@(movies: List[Movie], movieStats: Map[Int, MovieStat], title: String)
+
+@main("Welcome to Play starter") {
+  @header("Home")
+
+    <div class="container theme-showcase">
+      <h1>@movies.length @title</h1>
+      <div class="row">
+	      @for(movie <- movies){
+	        <div class="col-sm-4 col-md-2">
+		      <div class="thumbnail">
+		        <a href="@routes.Application.movie(movie.id)" title="@movie.name"><img src="@movie.url" style="height: 200px;"></a>
+		        <p>
+            		<i class="fa fa-star"></i> @utils.Formating.roundAt(movieStats(movie.id).avgRating, 1)<br />
+           			<i class="fa fa-thumbs-up"></i> @movieStats(movie.id).nbLikes / <i class="fa fa-thumbs-down"></i> @movieStats(movie.id).nbDislikes<br />
+		        </p>
+		      </div>
+	        </div>
+	      }
+	  </div>
+
+    </div> <!-- /container -->
+}

@@ -1,0 +1,44 @@
+@(ratings: List[Rating], recommendedMovies: List[(Movie, Double)], movies: Map[Int, Movie], movieStats: Map[Int, MovieStat])
+
+@main("Welcome to Play starter") {
+  @header("Profile")
+
+    <div class="container theme-showcase">
+      <h1>Movies recommended for you</h1>
+      <div class="row">
+	      @for(movie <- recommendedMovies){
+	        <div class="col-sm-4 col-md-3">
+		      <div class="thumbnail">
+		        <a href="@routes.Application.movie(movie._1.id)" title="@movie._1.name"><img src="@movie._1.url" style="height: 200px;"></a>
+		        <p>
+            		<i class="fa fa-star"></i> @utils.Formating.roundAt(movieStats(movie._1.id).avgRating, 1) (prediction: @utils.Formating.roundAt(movie._2, 2))<br />
+           			<i class="fa fa-thumbs-up"></i> @movieStats(movie._1.id).nbLikes / <i class="fa fa-thumbs-down"></i> @movieStats(movie._1.id).nbDislikes<br />
+		        </p>
+		      </div>
+	        </div>
+	      }
+	  </div>
+      
+      <h1>You have rated @ratings.length movies</h1>
+      <div class="row">
+	      @for(rating <- ratings){
+	        <div class="col-sm-6 col-md-3">
+	        <div class="media">
+			  <a class="pull-left" href="@routes.Application.movie(rating.movie)">
+			    <img class="media-object" src="@movies(rating.movie).url" style="width: 100px; height: 150px;">
+			  </a>
+			  <div class="media-body">
+			    <h4 class="media-heading">@movies(rating.movie).name</h4>
+			    <!-- <p>@movies(rating.movie).description</p> -->
+			    <p>
+			    	Your rating:  @rating.rating<br/>
+			    	Average rating: @utils.Formating.roundAt(movieStats(rating.movie).avgRating, 2)<br/>
+			    </p>
+			  </div>
+			</div>
+			</div>
+	      }
+	  </div>
+
+    </div> <!-- /container -->
+}
