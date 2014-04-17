@@ -12,6 +12,14 @@ import recommender.utils.MyCollectionUtils;
 import dao.DB;
 
 public class CFRecommender {
+	
+	/**
+	 * Make movie recommendations for the sprecified user with the <b>simpleAverage</b>
+	 * predictor
+	 * 
+	 * @param userId
+	 * @return movieId recommended with predicted rating
+	 */
 	public static Map<Integer, Double> simpleAverageRecommender(Integer userId) {
 		List<Rating> ratings = DB.getRatings();
 		List<Rating> userProfile = DataFilter.ratingsForUser(ratings, userId);
@@ -28,6 +36,13 @@ public class CFRecommender {
 		return MyCollectionUtils.sortByValue(moviesToPredict, false);
 	}
 
+	/**
+	 * Make movie recommendations for the sprecified user with the <b>ponderatedAverage</b>
+	 * predictor
+	 * 
+	 * @param userId
+	 * @return movieId recommended with predicted rating
+	 */
 	public static Map<Integer, Double> ponderatedAverageRecommender(Integer userId) {
 		List<Rating> ratings = DB.getRatings();
 		Map<Integer, List<Rating>> userPartitionnedRatings = DataOperation.groupByUser(ratings);
@@ -47,6 +62,13 @@ public class CFRecommender {
 		return MyCollectionUtils.sortByValue(moviesToPredict, false);
 	}
 
+	/**
+	 * Make movie recommendations for the sprecified user with the <b>normalizedPonderatedAverage</b>
+	 * predictor
+	 * 
+	 * @param userId
+	 * @return movieId recommended with predicted rating
+	 */
 	public static Map<Integer, Double> normalizedPonderatedAverageRecommender(Integer userId) {
 		List<Rating> ratings = DB.getRatings();
 		Map<Integer, List<Rating>> userPartitionnedRatings = DataOperation.groupByUser(ratings);

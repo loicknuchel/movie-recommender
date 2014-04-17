@@ -1,4 +1,7 @@
+#### WORK IN PROGRESS
+
 # Movie recommender
 
-This is a play 2 application to show how to easily implement recommender algorithms.
+This is a movie recommender application based on Scala Play 2 used to show how to implement really simple recommenders.
 
+All recommender code is written in Java in package `recommender`. Play with this code a see the impact on the recommended movies (for your profile).

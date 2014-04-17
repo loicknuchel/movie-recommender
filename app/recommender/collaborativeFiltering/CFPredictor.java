@@ -12,10 +12,27 @@ import models.Rating;
 
 public class CFPredictor {
 
+	/**
+	 * Perform a simple average of movie ratings
+	 * 
+	 * @param ratings
+	 * @param movie
+	 * @return average rating of the movie
+	 */
 	public static Double simpleAverage(List<Rating> ratings, Integer movie) {
 		return DataOperation.average(DataFilter.ratingsForMovie(ratings, movie));
 	}
 
+	/**
+	 * Perform an average of movie ratings ponderated with user similarities
+	 * 
+	 * @param ratings
+	 * @param user
+	 * @param movie
+	 * @param userPartitionnedRatings
+	 * @param similarities
+	 * @return
+	 */
 	public static Double ponderatedAverage(List<Rating> ratings, Integer user, Integer movie, Map<Integer, List<Rating>> userPartitionnedRatings,
 			Map<Integer, Double> similarities) {
 		Double sum = 0d, sumWeight = 0d;
@@ -32,6 +49,17 @@ public class CFPredictor {
 			return sum / sumWeight;
 	}
 
+	/**
+	 * Perform an average of movie ratings based on normalized ratings and
+	 * ponderated with user similarities
+	 * 
+	 * @param ratings
+	 * @param user
+	 * @param movie
+	 * @param userPartitionnedRatings
+	 * @param similarities
+	 * @return
+	 */
 	public static Double normalizedPonderatedAverage(List<Rating> ratings, Integer user, Integer movie, Map<Integer, List<Rating>> userPartitionnedRatings,
 			Map<Integer, Double> similarities) {
 		Double sum = 0d, sumWeight = 0d;
@@ -52,11 +80,42 @@ public class CFPredictor {
 			return DataOperation.denormalize(sum / sumWeight, userAvg, userDeviation);
 	}
 
-	public static Double userSimilarity(Map<Integer, List<Rating>> userPartitionnedRatings, Integer user1, Integer user2) {
+	/**
+	 * Perform similarity computing for a user with all other users
+	 * 
+	 * @param userPartitionnedRatings
+	 * @param user
+	 * @return similarities between user passed as parameter and user in map key
+	 */
+	public static Map<Integer, Double> userSimilarities(Map<Integer, List<Rating>> userPartitionnedRatings, Integer user) {
+		Map<Integer, Double> similarities = new HashMap<Integer, Double>();
+		for (Entry<Integer, List<Rating>> entry : userPartitionnedRatings.entrySet()) {
+			similarities.put(entry.getKey(), userSimilarity(userPartitionnedRatings, user, entry.getKey()));
+		}
+		return similarities;
+	}
+
+	/**
+	 * Perform similarity computing for a movie with all other movies
+	 * 
+	 * @param moviePartitionnedRatings
+	 * @param movie
+	 * @return similarities between movie passed as parameter and movie in map
+	 *         key
+	 */
+	public static Map<Integer, Double> movieSimilarities(Map<Integer, List<Rating>> moviePartitionnedRatings, Integer movie) {
+		Map<Integer, Double> similarities = new HashMap<Integer, Double>();
+		for (Entry<Integer, List<Rating>> entry : moviePartitionnedRatings.entrySet()) {
+			similarities.put(entry.getKey(), movieSimilarity(moviePartitionnedRatings, movie, entry.getKey()));
+		}
+		return similarities;
+	}
+
+	private static Double userSimilarity(Map<Integer, List<Rating>> userPartitionnedRatings, Integer user1, Integer user2) {
 		return userSimilarity(userPartitionnedRatings.get(user1), userPartitionnedRatings.get(user2));
 	}
 
-	public static Double userSimilarity(List<Rating> ratings1, List<Rating> ratings2) {
+	private static Double userSimilarity(List<Rating> ratings1, List<Rating> ratings2) {
 		Double avg1 = DataOperation.average(ratings1);
 		Double avg2 = DataOperation.average(ratings2);
 
@@ -75,19 +134,11 @@ public class CFPredictor {
 		}
 	}
 
-	public static Map<Integer, Double> userSimilarities(Map<Integer, List<Rating>> userPartitionnedRatings, Integer user) {
-		Map<Integer, Double> similarities = new HashMap<Integer, Double>();
-		for (Entry<Integer, List<Rating>> entry : userPartitionnedRatings.entrySet()) {
-			similarities.put(entry.getKey(), userSimilarity(userPartitionnedRatings, user, entry.getKey()));
-		}
-		return similarities;
-	}
-
-	public static Double movieSimilarity(Map<Integer, List<Rating>> moviePartitionnedRatings, Integer movie1, Integer movie2) {
+	private static Double movieSimilarity(Map<Integer, List<Rating>> moviePartitionnedRatings, Integer movie1, Integer movie2) {
 		return movieSimilarity(moviePartitionnedRatings.get(movie1), moviePartitionnedRatings.get(movie2));
 	}
 
-	public static Double movieSimilarity(List<Rating> ratings1, List<Rating> ratings2) {
+	private static Double movieSimilarity(List<Rating> ratings1, List<Rating> ratings2) {
 		Double avg1 = DataOperation.average(ratings1);
 		Double avg2 = DataOperation.average(ratings2);
 
@@ -104,13 +155,5 @@ public class CFPredictor {
 		} else {
 			return sum / sumWeight;
 		}
-	}
-
-	public static Map<Integer, Double> movieSimilarities(Map<Integer, List<Rating>> moviePartitionnedRatings, Integer movie) {
-		Map<Integer, Double> similarities = new HashMap<Integer, Double>();
-		for (Entry<Integer, List<Rating>> entry : moviePartitionnedRatings.entrySet()) {
-			similarities.put(entry.getKey(), movieSimilarity(moviePartitionnedRatings, movie, entry.getKey()));
-		}
-		return similarities;
 	}
 }

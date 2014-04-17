@@ -10,7 +10,16 @@ import recommender.nonPersonalized.Association;
 import recommender.utils.MyCollectionUtils;
 import dao.DB;
 
+/**
+ * This is the entry point for the application recommender system
+ */
 public class Recommender {
+
+	/**
+	 * @param movieId
+	 * @return a map of similar movies id with similarity indicator and ordered
+	 *         in descending order
+	 */
 	public static Map<Integer, Double> getSimilarMovies(Integer movieId) {
 		long start = System.currentTimeMillis();
 
@@ -22,6 +31,11 @@ public class Recommender {
 		return similarMovies;
 	}
 
+	/**
+	 * @param userId
+	 * @return a map of recommended movies id with the predicted rating for the
+	 *         user. The map is ordered in descending order.
+	 */
 	public static Map<Integer, Double> getRecommendedMovies(Integer userId) {
 		long start = System.currentTimeMillis();
 
@@ -33,7 +47,7 @@ public class Recommender {
 		return recommendedMovies;
 	}
 
-	public static Map<Integer, Double> randomMovies() {
+	private static Map<Integer, Double> randomMovies() {
 		Map<Integer, Double> randomMovies = new HashMap<Integer, Double>();
 		Map<Object, Movie> movies = DB.getMovies();
 		for (Entry<Object, Movie> entry : movies.entrySet()) {
